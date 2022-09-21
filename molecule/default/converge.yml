@@ -2,6 +2,8 @@
 - name: Converge
   hosts: all
   gather_facts: false
+  vars:
+    resolv_conf_file: /etc/resolv-test.conf
   tasks:
     - name: "Include mtik00.wsl_resolv_conf"
       ansible.builtin.include_role:

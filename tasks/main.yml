@@ -1,1 +1,55 @@
 ---
+- name: set WSL fact
+  ansible.builtin.include_tasks: facts.yml
+
+- name: Fix resolv.conf in WSL2
+  become: true
+  when: is_wsl2
+  block:
+    - name: Check resolv.conf
+      ansible.builtin.stat:
+        path: "{{ resolv_conf_file }}"
+      register: resolv_conf
+
+    - name: Output stat
+      ansible.builtin.debug:
+        msg: "{{ resolv_conf }}"
+
+    - name: Esnure resolv.conf is mutable
+      become: true
+      when:
+        - resolv_conf.stat.exists
+        - "'immutable' in resolv_conf.stat.attributes"
+      ansible.builtin.file:
+        path: "{{ resolv_conf_file }}"
+        mode: '0644'
+        attr: -i
+      changed_when: false
+
+    - name: Delete the resolv.conf symlink
+      ansible.builtin.file:
+        path: "{{ resolv_conf_file }}"
+        state: absent
+      when:
+        - resolv_conf.stat.exists
+        - resolv_conf.stat.islnk
+
+    - name: Create new resolv.conf file
+      ansible.builtin.template:
+        src: files/templates/resolv.conf.j2
+        dest: "{{ resolv_conf_file }}"
+        mode: '0644'
+
+    - name: Check resolv.conf
+      ansible.builtin.stat:
+        path: "{{ resolv_conf_file }}"
+      register: resolv_conf
+
+    - name: Esnure resolv.conf is immutable
+      when: "'immutable' not in resolv_conf.stat.attributes"
+      ansible.builtin.file:
+        path: "{{ resolv_conf_file }}"
+        mode: '0644'
+        attr: +i
+      changed_when: false
+      tags: notest  # NOTE: Fixes `Operation not permitted` while running molecule

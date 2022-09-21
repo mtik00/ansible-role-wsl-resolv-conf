@@ -1,0 +1,9 @@
+---
+
+- name: Check for WSL2
+  ansible.builtin.set_fact:
+    is_wsl2: "{{ lookup('env', 'WSL_DISTRO_NAME') != '' }}"
+
+- name: WSL debug
+  ansible.builtin.debug:
+    msg: "is_wsl2: {{ is_wsl2 }}"

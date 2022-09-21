@@ -1,1 +1,4 @@
 ---
+
+nameserver: 1.1.1.1
+resolv_conf_file: /etc/resolv.conf
