@@ -1,5 +1,5 @@
-mtik00.wsl-resolve-conf
-=======================
+mtik00.wsl_resolv_conf
+======================
 
 A brief description of the role goes here.
 
@@ -25,7 +25,7 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: servers
       roles:
-         - { role: mtik00.wsl-resolve-conf, x: 42 }
+         - { role: mtik00.wsl_resolv_conf, x: 42 }
 
 License
 -------

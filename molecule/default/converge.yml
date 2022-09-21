@@ -3,6 +3,6 @@
   hosts: all
   gather_facts: false
   tasks:
-    - name: "Include mtik00.wsl-resolve-conf"
+    - name: "Include mtik00.wsl_resolv_conf"
       ansible.builtin.include_role:
-        name: "mtik00.wsl-resolve-conf"
+        name: "mtik00.wsl_resolv_conf"
